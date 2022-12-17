@@ -6,8 +6,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.example.marvel_mvvm.Extensions.toMD5
+import com.example.marvel_mvvm.common.Extensions.toMD5
 import com.example.marvel_mvvm.data.ApiService
+import com.example.marvel_mvvm.data.repository.MarvelCharactersRepositoryImpl
+import com.example.marvel_mvvm.domain.usecase.MarvelCharactersUseCaseImpl
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -33,9 +35,13 @@ class MainActivity : AppCompatActivity() {
             .build()
 
         val apiService = retrofit.create(ApiService::class.java)
+        val repository = MarvelCharactersRepositoryImpl(apiService)
+        val useCase = MarvelCharactersUseCaseImpl(repository)
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                Log.d("####", "result - "+apiService.getMarvelCharacters(timeStamp.toString(), BuildConfig.MARVEL_PUBLIC_KEY, hashString))
+                useCase(timeStamp.toString(), BuildConfig.MARVEL_PUBLIC_KEY, hashString).collect {
+                    Log.d("####", "result - "+it.data?.data?.results?.size)
+                }
             }
         }
     }

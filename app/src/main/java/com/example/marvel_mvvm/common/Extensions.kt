@@ -1,4 +1,4 @@
-package com.example.marvel_mvvm
+package com.example.marvel_mvvm.common
 
 import java.security.MessageDigest
 

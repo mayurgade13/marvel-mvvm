@@ -1,5 +1,7 @@
 package com.example.marvel_mvvm.data
 
+import com.example.marvel_mvvm.data.remote.dto.MarvelCharacters
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -19,5 +21,5 @@ interface ApiService {
         @Query(MARVEL_API_TIMESTAMP) timestamp: String,
         @Query(MARVEL_API_KEY) apiKey: String,
         @Query(MARVEL_API_HASH) hash: String
-    )
+    ): Response<MarvelCharacters>
 }
